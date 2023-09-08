@@ -97,5 +97,30 @@ namespace EmployeeApplication.Controllers
             await _dbContext.SaveChangesAsync();
             return Ok();
         }
+
+
+
+
+
+
+
+        [HttpGet("highest-salary")]
+        public async Task<ActionResult<Employee>> GetEmployeeWithHighestSalary()
+        {
+            var employees = await _dbContext.Employees.ToListAsync();
+            if (employees == null || employees.Count == 0)
+            {
+                return NotFound();
+            }
+
+            // Find the employee with the highest salary
+            var highestSalaryEmployee = employees.OrderByDescending(e => e.employeeSalary).First();
+
+            
+          
+
+            return highestSalaryEmployee;
+        }
+
     }
 }
