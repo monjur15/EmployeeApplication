@@ -104,22 +104,26 @@ namespace EmployeeApplication.Controllers
 
 
 
-        [HttpGet("highest-salary")]
-        public async Task<ActionResult<Employee>> GetEmployeeWithHighestSalary()
+        [HttpGet("third-highest-salary")]
+        public async Task<ActionResult<Employee>> GetEmployeeWithThirdHighestSalary()
         {
             var employees = await _dbContext.Employees.ToListAsync();
-            if (employees == null || employees.Count == 0)
+
+            // Check if there are at least 3 employees
+            if (employees.Count < 3)
+            {
+                return NotFound("There are not enough employees to find the third-highest salary.");
+            }
+
+            // Find the employee with the third-highest salary
+            var thirdHighestSalaryEmployee = employees.OrderByDescending(e => e.employeeSalary).Skip(2).FirstOrDefault();
+
+            if (thirdHighestSalaryEmployee == null)
             {
                 return NotFound();
             }
 
-            // Find the employee with the highest salary
-            var highestSalaryEmployee = employees.OrderByDescending(e => e.employeeSalary).First();
-
-            
-          
-
-            return highestSalaryEmployee;
+            return thirdHighestSalaryEmployee;
         }
 
     }
