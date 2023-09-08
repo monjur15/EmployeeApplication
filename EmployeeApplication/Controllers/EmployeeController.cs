@@ -48,5 +48,16 @@ namespace EmployeeApplication.Controllers
 
             return CreatedAtAction(nameof(GetEmployee), new {id=employee.employeeId}, employee);
         }
+
+        [HttpPut]
+
+        public async Task<IActionResult> PutEmployee(int id, Employee employee)
+        {
+            if (id != employee.employeeId)
+            {
+                return BadRequest();
+            }
+            _dbContext.Entry(employee).State = EntityState.Modified;
+        }
     }
 }
