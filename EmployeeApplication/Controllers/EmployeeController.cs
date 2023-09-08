@@ -88,7 +88,14 @@ namespace EmployeeApplication.Controllers
             {
                 return NotFound();
             }
-            var employee = _dbContext.Employees.FindAsync(id);
+            var employee =await _dbContext.Employees.FindAsync(id);
+            if (employee == null)
+            {
+                return NotFound();
+            }
+            _dbContext.Employees.Remove(employee);
+            await _dbContext.SaveChangesAsync();
+            return Ok();
         }
     }
 }
