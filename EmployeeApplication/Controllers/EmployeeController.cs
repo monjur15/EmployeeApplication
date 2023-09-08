@@ -58,6 +58,37 @@ namespace EmployeeApplication.Controllers
                 return BadRequest();
             }
             _dbContext.Entry(employee).State = EntityState.Modified;
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException) {
+                if (!EmployeeAvailable(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            
+            }
+            return Ok();
+        }
+
+        private bool EmployeeAvailable(int id)
+        {
+            return(_dbContext.Employees?.Any(x=>x.employeeId== id)).GetValueOrDefault();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteEmployee(int id)
+        {
+            if (_dbContext.Employees == null)
+            {
+                return NotFound();
+            }
+            var employee = _dbContext.Employees.FindAsync(id);
         }
     }
 }
